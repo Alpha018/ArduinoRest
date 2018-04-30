@@ -1,5 +1,5 @@
 /**
- * Created by Tomás on 17-04-2018.
+ * Created by Tomás on 17-12-2017.
  */
 'use strict';
 
@@ -7,11 +7,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
-
-const cookie = require('cookie-parser');
-
-const jwt = require('jwt-simple');
-const moment = require('moment');
+const fs = require('fs');
 
 const app = express();
 app.use(cors());
@@ -26,16 +22,17 @@ app.use((req, res, next) =>{
     next();
 });
 
-//middleware bodyparser (Para que es necesario?)
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
 //cargar rutas
+const arduino_routes = require('./server/routes/arduino');
 
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, 'dist')));
 
 //Ruta Base
+app.use('/api/arduino', arduino_routes);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
